@@ -10,7 +10,6 @@ s3_resource = boto3.resource('s3')
 DATABASE = os.environ['DATABASE']
 S3_QUERY_OUTPUT = os.environ['S3_QUERY_OUTPUT']
 S3_OUTPUT = os.environ['S3_OUTPUT']
-History_Path = "report_usage_history"
 
 def aggregate_record(event, context):
     rollup_query = ScriptReader.get_script('rollup_query.sql')
