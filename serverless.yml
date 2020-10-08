@@ -1,0 +1,83 @@
+service: report-consumer
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: python3.8
+  profile: ${opt:stage, 'dev'}
+  region: ap-southeast-2
+  timeout: 180
+  memorySize: 256 
+  stackTags:
+   Owner: 'kthandapani@MTDATA.COM.AU' 
+  tags:
+   Owner: 'kthandapani@MTDATA.COM.AU'
+  environment:
+        DATABASE: ${self:custom.database.${self:custom.stage}}
+        S3_OUTPUT: ${self:custom.s3Output.${self:custom.stage}}
+        TARGET_BUCKET: ${self:custom.s3Bucket.${self:custom.stage}}
+        S3_QUERY_OUTPUT: ${self:custom.s3QueryOutut.${self:custom.stage}}
+        
+        
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+              - "s3:*"  
+              - "lambda:*"
+              - "cloudwatch:*"
+              - "iam:PassRole"
+              - "iam:CreateServiceLinkedRole"
+              - "events:putrule"
+              - "events:putTargets"
+              - "glue:*"
+              - "logs:*"
+              - "athena:*"
+              - "ec2:*"
+      Resource: 
+        - "*" 
+
+custom: 
+  defaultStage: dev
+  defaultProfile: default
+  stage: ${opt:stage, self:provider.stage}
+  profiles:
+      dev: default
+      qa: default
+      prod: prod
+  database:
+      dev: msg_broker_qa
+      prod: msg_broker
+  s3Output:
+      dev: 'mtdata-datalake-qa'               
+      prod: 'mtdata-datalake-prod'
+  s3Bucket:
+      dev: 'mtdata.dev.staticstorage'
+      prod: 'mtdata.prod.staticstorage' 
+  s3QueryOutut:
+      dev: 's3://mtdata-datalake-qa/report_usage_query_output'   
+      prod: 's3://mtdata-datalake-prod/report_usage_query_output'
+        
+  
+functions:
+  report:
+    handler: resource_consumer.report
+    environment:
+        environment: ${self:provider.stage}
+    events:
+      - s3:
+          bucket: ${self:custom.s3Bucket.${self:custom.stage}} 
+          event:  "s3:ObjectCreated:*"
+          rules:
+            - suffix: .requests
+          existing: true
+
+  aggregate_record:
+    handler: aggregate.aggregate_record
+    events:
+      - schedule: cron(00 20 * * ? *)
+    environment:
+        environment: ${self:provider.stage}
+          
+
+plugins:
+  - serverless-python-requirements
