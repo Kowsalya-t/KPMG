@@ -12,38 +12,6 @@ s3 = boto3.resource('s3')
 S3_OUTPUT = os.environ['S3_OUTPUT']
 TARGET_BUCKET = os.environ['TARGET_BUCKET']
 
-def get_event_data(event):
-    key = event['Records'][0]['s3']['object']['key']
-    sequencer = event['Records'][0]['s3']['object']['sequencer']
-    stackname = event['Records'][0]['s3']['object']['key'].split('/')[0]
-    return {'key': key, 'sequencer': sequencer, 'stackname':stackname }
-
-def get_cur_time():
-    timeNow = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-    timeNowMinute = datetime.utcnow()
-    return {'timeNow' : timeNow, 'timeNowMinute' : timeNowMinute }
-
-def assign_value(request,field,report_data,quotes):
-    param = request.find(field)
-    if param != None:
-        if quotes != 0:
-            if param.text != None:
-                param = '"' + re.sub('\s+',' ',param.text) + '"'
-            else:
-                param = ""    
-        else:
-            if param.text != None:
-                param = re.sub('\s+',' ',param.text)
-            else:
-                param = ''      
-    else:
-        if quotes != 0:
-            param = ""
-        else:
-            param = ''
-    report_data.append(param)
-    return  report_data  
-    
 def report(event, context):
     key = get_event_data(event)['key']
     sequencer = get_event_data(event)['sequencer']
@@ -97,3 +65,35 @@ def report(event, context):
     
     if DATA_EXTRACTED != 0:
         s3.meta.client.upload_file('/tmp/report_request.csv', S3_OUTPUT, 'report_usage_inter/report_request_'+sequencer+'.csv')                           
+        
+def get_event_data(event):
+    key = event['Records'][0]['s3']['object']['key']
+    sequencer = event['Records'][0]['s3']['object']['sequencer']
+    stackname = event['Records'][0]['s3']['object']['key'].split('/')[0]
+    return {'key': key, 'sequencer': sequencer, 'stackname':stackname }
+
+def get_cur_time():
+    timeNow = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    timeNowMinute = datetime.utcnow()
+    return {'timeNow' : timeNow, 'timeNowMinute' : timeNowMinute }
+
+def assign_value(request,field,report_data,quotes):
+    param = request.find(field)
+    if param != None:
+        if quotes != 0:
+            if param.text != None:
+                param = '"' + re.sub('\s+',' ',param.text) + '"'
+            else:
+                param = ""    
+        else:
+            if param.text != None:
+                param = re.sub('\s+',' ',param.text)
+            else:
+                param = ''      
+    else:
+        if quotes != 0:
+            param = ""
+        else:
+            param = ''
+    report_data.append(param)
+    return  report_data          
