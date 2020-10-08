@@ -47,9 +47,9 @@ def move_intermediate_data_to_history():
     no_of_files = len(s3_client.list_objects_v2(Bucket=S3_OUTPUT, Prefix='report_usage_inter/')['Contents'])
     index = 0
     while index < no_of_files:
-        #Copy file from  report_usage_inter to  report_usage_inter_history
+        #Copy file from  report_usage_inter to  report_usage_history
         filename = s3_client.list_objects_v2(Bucket=S3_OUTPUT, Prefix='report_usage_inter/')['Contents'][0]['Key'].split('/')[1]
-        s3_resource.Object(S3_OUTPUT, "report_usage_inter_history/"+filename).copy_from(CopySource=S3_OUTPUT+"/report_usage_inter/"+filename)
+        s3_resource.Object(S3_OUTPUT, "report_usage_history/"+filename).copy_from(CopySource=S3_OUTPUT+"/report_usage_inter/"+filename)
         
         # Delete the object from report_usage_inter after copy
         s3_resource.Object(S3_OUTPUT, "report_usage_inter/"+filename).delete()
