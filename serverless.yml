@@ -48,13 +48,13 @@ custom:
       dev: msg_broker_qa
       prod: msg_broker
   s3Output:
-      dev: 'mtdata-datalake-qa'               
+      dev: 'mtdata-datalake-dev'               
       prod: 'mtdata-datalake-prod'
   s3Bucket:
       dev: 'mtdata.dev.staticstorage'
       prod: 'mtdata.prod.staticstorage' 
   s3QueryOutut:
-      dev: 's3://mtdata-datalake-qa/report_usage_query_output'   
+      dev: 's3://mtdata-datalake-dev/report_usage_query_output'   
       prod: 's3://mtdata-datalake-prod/report_usage_query_output'
         
   
