@@ -34,6 +34,7 @@ def report(event, context):
 
     DATA_EXTRACTED = 0
     for request in root.findall('./Requests/ReportRequest[last()]'):
+        #Convert SubmitTime to the format of current date time
         submitTime = request.find('SubmitTime')
         submitTime = submitTime.text
         hourMin = submitTime.split('T')[1]
