@@ -21,7 +21,7 @@ WITH SERDEPROPERTIES (
    )
 STORED AS TEXTFILE
 LOCATION
-  's3://mtdata-datalake-qa/report_usage_inter/'
+  's3://mtdata-datalake-dev/report_usage_inter/'
 TBLPROPERTIES (
   'skip.header.line.count'='1'
   );
