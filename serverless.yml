@@ -9,9 +9,9 @@ provider:
   timeout: 180
   memorySize: 256 
   stackTags:
-   Owner: 'kthandapani@MTDATA.COM.AU' 
+   Owner: 'Kowsalya' 
   tags:
-   Owner: 'kthandapani@MTDATA.COM.AU'
+   Owner: 'Kowsalya'
   environment:
         DATABASE: ${self:custom.database.${self:custom.stage}}
         S3_OUTPUT: ${self:custom.s3Output.${self:custom.stage}}
