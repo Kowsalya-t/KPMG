@@ -45,7 +45,7 @@ custom:
       qa: default
       prod: prod
   database:
-      dev: msg_broker_qa
+      dev: msg_broker_dev
       prod: msg_broker
   s3Output:
       dev: 'mtdata-datalake-dev'               
