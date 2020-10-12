@@ -26,7 +26,6 @@ provider:
               - "lambda:*"
               - "cloudwatch:*"
               - "iam:PassRole"
-              - "iam:CreateServiceLinkedRole"
               - "events:putrule"
               - "events:putTargets"
               - "glue:*"
